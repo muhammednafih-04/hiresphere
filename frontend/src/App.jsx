@@ -13,6 +13,7 @@ function App() {
   const [search, setSearch] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -170,10 +171,48 @@ function App() {
         </div>
       </header>
 
+      {selectedJob && (
+          <section className="job-details-page">
+          <button
+          className="back-btn"
+           onClick={() => setSelectedJob(null)}
+          >
+          ← Back to Jobs
+        </button>
+
+      <div className="job-details-card">
+      <p className="eyebrow">JOB DETAILS</p>
+
+      <h1>{selectedJob.title}</h1>
+      <h3>{selectedJob.company}</h3>
+
+      <p>Location: {selectedJob.location}</p>
+      <p>Job Type: {selectedJob.job_type}</p>
+      <p>Salary: {selectedJob.salary}</p>
+
+      <h3>Description</h3>
+      <p>{selectedJob.description}</p>
+
+      <h3>Required Skills</h3>
+      <p>{selectedJob.required_skills}</p>
+
+      <button
+        className="apply-btn"
+        onClick={() =>
+          alert("Job applications will be implemented in the next module.")
+        }
+          >
+           Apply Now →
+          </button>
+        </div>
+      </section>
+    )}
+
       <main>
         <section id="post-job" className="post-job-section">
           <div className="section-heading">
             <div>
+          
               <p className="eyebrow">EMPLOYER CENTRE</p>
               <h2>Post a Job</h2>
             </div>
@@ -368,13 +407,14 @@ function App() {
                 </p>
 
                 <button
-                  className="apply-btn"
-                  onClick={() =>
-                    alert('Job applications will be added in a later step.')
-                  }
+              className="apply-btn"
+              onClick={() => {
+              setSelectedJob(job);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 >
-                  View Opportunity →
-                </button>
+              View Opportunity →
+              </button>
               </article>
             )))}
           </div>

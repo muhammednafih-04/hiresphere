@@ -460,3 +460,47 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+.job-details-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 6%;
+}
+
+.back-btn {
+  border: none;
+  background: transparent;
+  color: #6946e8;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.job-details-card {
+  background: #fff;
+  border: 1px solid #e9e7f2;
+  border-radius: 18px;
+  padding: 35px;
+  box-shadow: 0 12px 35px rgba(40, 25, 90, 0.07);
+}
+
+.job-details-card h1 {
+  color: #28233d;
+  margin: 12px 0;
+}
+
+.job-details-card h3 {
+  color: #6946e8;
+  margin-top: 25px;
+}
+
+.job-details-card p {
+  line-height: 1.8;
+  color: #666078;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .job-details-card {
+    padding: 22px;
+  }
+}
