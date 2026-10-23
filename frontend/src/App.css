@@ -429,3 +429,34 @@ footer p {
     padding: 45px 5%;
   }
 }
+
+.job-search {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.job-search input,
+.job-search select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 13px;
+  border: 1px solid #dedbea;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.job-search input:focus,
+.job-search select:focus {
+  outline: 2px solid #7455e8;
+  border-color: transparent;
+}
+
+@media (max-width: 650px) {
+  .job-search {
+    grid-template-columns: 1fr;
+  }
+}

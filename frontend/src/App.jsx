@@ -10,6 +10,9 @@ function App() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [search, setSearch] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -42,6 +45,21 @@ function App() {
   useEffect(() => {
     loadJobs();
   }, []);
+  
+  const filteredJobs = jobs.filter((job) => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(search.toLowerCase()) ||
+      job.company.toLowerCase().includes(search.toLowerCase()) ||
+      job.required_skills.toLowerCase().includes(search.toLowerCase());
+  
+    const matchesLocation =
+      job.location.toLowerCase().includes(locationFilter.toLowerCase());
+  
+    const matchesType =
+      typeFilter === '' || job.job_type === typeFilter;
+  
+    return matchesSearch && matchesLocation && matchesType;
+  });
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -275,6 +293,35 @@ function App() {
               <p className="eyebrow">OPPORTUNITIES FOR YOU</p>
               <h2>Latest Jobs</h2>
             </div>
+            
+<div className="job-search">
+  <input
+    type="text"
+    placeholder="Search job title, company or skills..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
+
+  <input
+    type="text"
+    placeholder="Filter by location..."
+    value={locationFilter}
+    onChange={(e) => setLocationFilter(e.target.value)}
+  />
+
+  <select
+    value={typeFilter}
+    onChange={(e) => setTypeFilter(e.target.value)}
+  >
+    <option value="">All Job Types</option>
+    <option value="Full-time">Full-time</option>
+    <option value="Part-time">Part-time</option>
+    <option value="Internship">Internship</option>
+    <option value="Remote">Remote</option>
+    <option value="Contract">Contract</option>
+  </select>
+</div>
+
 
             <span className="job-count">
               {jobs.length} jobs
@@ -292,13 +339,17 @@ function App() {
           )}
 
           <div className="job-grid">
-            {jobs.map((job) => (
+          {filteredJobs.map((job) => ( (
               <article className="job-card" key={job.id}>
                 <div className="company-icon">
                   {(job.company || '?').charAt(0).toUpperCase()}
                 </div>
 
                 <span className="job-type">{job.job_type}</span>
+
+                <span className="job-count">
+                {filteredJobs.length} jobs found
+                </span>
 
                 <h3>{job.title}</h3>
                 <p className="company-name">{job.company}</p>
@@ -325,7 +376,7 @@ function App() {
                   View Opportunity →
                 </button>
               </article>
-            ))}
+            )))}
           </div>
         </section>
       </main>
