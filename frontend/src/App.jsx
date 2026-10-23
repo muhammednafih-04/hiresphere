@@ -14,6 +14,19 @@ function App() {
   const [locationFilter, setLocationFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [selectedJob, setSelectedJob] = useState(null);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [applicationJob, setApplicationJob] = useState(null);
+
+  const [applicationData, setApplicationData] = useState({
+  applicant_name: "",
+  applicant_email: "",
+  resume_link: "",
+  cover_letter: "",
+  });
+  const handleApply = (job) => {
+    setApplicationJob(job);
+    setShowApplicationForm(true);
+  };
 
   const [newJob, setNewJob] = useState({
     title: '',
@@ -175,7 +188,7 @@ function App() {
           <section className="job-details-page">
           <button
           className="back-btn"
-           onClick={() => setSelectedJob(null)}
+          onClick={() => handleApply(selectedJob)}
           >
           ← Back to Jobs
         </button>
@@ -417,7 +430,78 @@ function App() {
               </button>
               </article>
             )))}
-          </div>
+            {showApplicationForm && applicationJob && (
+  <div className="application-overlay">
+    <div className="application-modal">
+      <button
+        type="button"
+        className="close-application"
+        onClick={() => setShowApplicationForm(false)}
+      >
+        ×
+      </button>
+
+      <h2>Apply for {applicationJob.title}</h2>
+      <p>{applicationJob.company}</p>
+
+      <form onSubmit={submitApplication}>
+        <input
+          type="text"
+          placeholder="Full Name"
+          value={applicationData.applicant_name}
+          onChange={(e) =>
+            setApplicationData({
+              ...applicationData,
+              applicant_name: e.target.value,
+            })
+          }
+          required
+        />
+
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={applicationData.applicant_email}
+          onChange={(e) =>
+            setApplicationData({
+              ...applicationData,
+              applicant_email: e.target.value,
+            })
+          }
+          required/>
+
+        <input
+          type="url"
+          placeholder="Resume link (Google Drive, etc.)"
+          value={applicationData.resume_link}
+          onChange={(e) =>
+            setApplicationData({
+              ...applicationData,
+              resume_link: e.target.value,
+            })
+          }
+          required
+        />
+
+        <textarea
+          placeholder="Cover Letter (optional)"
+          value={applicationData.cover_letter}
+          onChange={(e) =>
+            setApplicationData({
+              ...applicationData,
+              cover_letter: e.target.value,
+            })
+          }
+        />
+
+        <button type="submit">Submit Application</button>
+      </form>
+    </div>
+  </div>
+)}
+   
+</div>
+              
         </section>
       </main>
 
