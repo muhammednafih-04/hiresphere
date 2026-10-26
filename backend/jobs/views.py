@@ -5,7 +5,12 @@ from .models import Job
 from .serializers import JobSerializer
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer
+from rest_framework import status
+from .models import JobApplication
 
+
+#----job list-----#
+#-----------------#
 @api_view(['GET','POST'])
 def job_list(request):
     if request.method == 'GET':
@@ -27,6 +32,8 @@ def job_list(request):
         status=status.HTTP_400_BAD_REQUEST
     )
  
+ #----application list-----#
+#-----------------#
 @api_view(['GET', 'POST'])
 def application_list(request):
     if request.method == 'GET':
@@ -44,3 +51,23 @@ def application_list(request):
         )
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+#----job apply-----#
+#-----------------#
+@api_view(['POST'])
+def apply_for_job(request):
+    serializer = JobApplicationSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+    return Response(
+        serializer.errors,
+        status=status.HTTP_400_BAD_REQUEST
+    )

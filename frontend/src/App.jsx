@@ -16,6 +16,8 @@ function App() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [applicationJob, setApplicationJob] = useState(null);
+  const [jobTypeFilter, setJobTypeFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState('')
 
   const [applicationData, setApplicationData] = useState({
   applicant_name: "",
@@ -75,6 +77,8 @@ function App() {
     return matchesSearch && matchesLocation && matchesType;
   });
 
+  
+
   function handleChange(event) {
     const { name, value } = event.target;
 
@@ -84,53 +88,64 @@ function App() {
     }));
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setMessage('');
-    setError('');
-    setSubmitting(true);
+  
+async function handleSubmit(event) {
+  event.preventDefault();
+  setMessage('');
+  setError('');
+  setSubmitting(true);
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(newJob),
+    });
+
+    const responseText = await response.text();
+    let data;
 
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newJob),
-      });
-
-      const responseText = await response.text();
-
-      console.log("POST status:", response.status);
-      console.log("POST response:", responseText);
-      
-      let data;
-      
-      try {
-        data = JSON.parse(responseText);
-      } catch {
-        throw new Error(
-          `Server returned HTML or invalid JSON. Status: ${response.status}. Check the console.`
-        );
-      }
-      setMessage('Job posted successfully!');
-      setNewJob({
-        title: '',
-        company: '',
-        location: '',
-        job_type: 'Full-time',
-        salary: '',
-        description: '',
-        required_skills: '',
-      });
-
-      await loadJobs();
-    } catch (err) {
-      setError(err.message || 'Unable to post the job.');
-    } finally {
-      setSubmitting(false);
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        `Django returned HTML instead of JSON. HTTP status: ${response.status}`
+      );
     }
+
+    if (!response.ok) {
+      const details = Object.entries(data)
+        .map(([field, errors]) =>
+          `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`
+        )
+        .join(' | ');
+
+      throw new Error(details || `Request failed: ${response.status}`);
+    }
+
+    setMessage('Job posted successfully!');
+
+    setNewJob({
+      title: '',
+      company: '',
+      location: '',
+      job_type: 'Full-time',
+      salary: '',
+      description: '',
+      required_skills: '',
+    });
+
+    await loadJobs();
+  } catch (err) {
+    setError(err.message || 'Unable to post the job.');
+  } finally {
+    setSubmitting(false);
   }
+}
+
 
   return (
     <div className="app">
