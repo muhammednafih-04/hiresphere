@@ -18,6 +18,15 @@ function App() {
   const [applicationJob, setApplicationJob] = useState(null);
   const [jobTypeFilter, setJobTypeFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('')
+  const [applicationMessage, setApplicationMessage] = useState("");
+const [applying, setApplying] = useState(false);
+
+const [applicationForm, setApplicationForm] = useState({
+  applicant_name: "",
+  applicant_email: "",
+  resume_link: "",
+  cover_letter: "",
+});
 
   const [applicationData, setApplicationData] = useState({
   applicant_name: "",
@@ -88,7 +97,7 @@ function App() {
     }));
   }
 
-  
+  //*********handle submit*******//
 async function handleSubmit(event) {
   event.preventDefault();
   setMessage('');
@@ -146,6 +155,77 @@ async function handleSubmit(event) {
   }
 }
 
+//handleapplicationchange//
+
+const handleApplicationSubmit = async (e) => {
+  e.preventDefault();
+  setApplying(true);
+  setApplicationMessage("");
+
+  try {
+    const formData = new FormData();
+
+    formData.append("job", selectedJob.id);
+    formData.append(
+      "applicant_name",
+      applicationForm.applicant_name
+    );
+    formData.append(
+      "applicant_email",
+      applicationForm.applicant_email
+    );
+    formData.append("resume", applicationForm.resume);
+    formData.append(
+      "cover_letter",
+      applicationForm.cover_letter
+    );
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/applications/",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const responseText = await response.text();
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        "Invalid server response. Check the Django terminal."
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(data));
+    }
+
+    setApplicationMessage("Application submitted successfully!");
+    alert("Application submitted successfully!");
+
+  } catch (error) {
+    console.error("Application error:", error);
+    setApplicationMessage("Application failed: " + error.message);
+    alert("Application failed: " + error.message);
+
+  } finally {
+    setApplying(false);
+  }
+};
+
+    setApplicationMessage("Application submitted successfully!");
+
+    setApplicationForm({
+      applicant_name: "",
+      applicant_email: "",
+      resume: null,
+      cover_letter: "",
+    });
+
+  
 
   return (
     <div className="app">
@@ -225,16 +305,71 @@ async function handleSubmit(event) {
       <p>{selectedJob.required_skills}</p>
 
       <button
-        className="apply-btn"
-        onClick={() =>
-          alert("Job applications will be implemented in the next module.")
-        }
-          >
-           Apply Now →
-          </button>
+       type="button"
+      onClick={() => {
+      setShowApplicationForm(true);
+      setApplicationMessage("");
+         }}
+        >    Apply Now
+         </button>
         </div>
       </section>
     )}
+    
+{showApplicationForm && (
+  <form onSubmit={handleApplicationSubmit}>
+    <h3>Apply for {selectedJob.title}</h3>
+
+    <input
+      type="text"
+      name="applicant_name"
+      placeholder="Your full name"
+      value={applicationForm.applicant_name}
+      onChange={handleApplicationChange}
+      required
+    />
+
+    <input
+      type="email"
+      name="applicant_email"
+      placeholder="Your email"
+      value={applicationForm.applicant_email}
+      onChange={handleApplicationChange}
+      required
+    />
+     
+     
+    <label htmlFor="resume">Upload Resume (PDF or Image)</label>
+    <input
+      id="resume"
+      type="file"
+      name="resume"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) =>
+        setApplicationForm({
+          ...applicationForm,
+          resume: e.target.files[0] || null,
+        })
+      }
+      required
+    />
+
+
+    <textarea
+      name="cover_letter"
+      placeholder="Write your cover letter"
+      value={applicationForm.cover_letter}
+      onChange={handleApplicationChange}
+    />
+
+    <button type="submit" disabled={applying}>
+      {applying ? "Submitting..." : "Submit Application"}
+    </button>
+  </form>
+)}
+
+{applicationMessage && <p>{applicationMessage}</p>}
+
 
       <main>
         <section id="post-job" className="post-job-section">
@@ -484,15 +619,15 @@ async function handleSubmit(event) {
             })
           }
           required/>
-
+          
         <input
-          type="url"
-          placeholder="Resume link (Google Drive, etc.)"
-          value={applicationData.resume_link}
+          type="file"
+          name="resume"
+          accept=".pdf,image/jpeg,image/png"
           onChange={(e) =>
-            setApplicationData({
-              ...applicationData,
-              resume_link: e.target.value,
+            setApplicationForm({
+              ...applicationForm,
+              resume: e.target.files[0],
             })
           }
           required
@@ -528,5 +663,4 @@ async function handleSubmit(event) {
     </div>
   );
 }
-
 export default App;
