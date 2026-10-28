@@ -6,7 +6,6 @@ from .serializers import JobSerializer
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer
 from rest_framework import status
-from .models import JobApplication
 
 
 #----job list-----#

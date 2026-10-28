@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Job
 from .models import Application
-from .models import JobApplication
 
 
 @admin.register(Job)
@@ -35,13 +34,3 @@ class ApplicationAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(JobApplication)
-class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = (
-        'applicant_name',
-        'applicant_email',
-        'job',
-        'applied_at',
-    )
-    search_fields = ('applicant_name', 'applicant_email')
-    list_filter = ('applied_at',)
