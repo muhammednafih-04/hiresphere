@@ -19,9 +19,8 @@ function App() {
   const [jobTypeFilter, setJobTypeFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('')
   const [applicationMessage, setApplicationMessage] = useState("");
-const [applying, setApplying] = useState(false);
-
-const [applicationForm, setApplicationForm] = useState({
+  const [applying, setApplying] = useState(false);
+  const [applicationForm, setApplicationForm] = useState({
   applicant_name: "",
   applicant_email: "",
   resume_link: "",
@@ -85,9 +84,8 @@ const [applicationForm, setApplicationForm] = useState({
   
     return matchesSearch && matchesLocation && matchesType;
   });
-
   
-
+//handlechange//
   function handleChange(event) {
     const { name, value } = event.target;
 
