@@ -202,7 +202,15 @@ const handleApplicationSubmit = async (e) => {
     }
 
     setApplicationMessage("Application submitted successfully!");
-    alert("Application submitted successfully!");
+
+    setApplicationForm({
+     applicant_name: "",
+     applicant_email: "",
+     resume: null,
+     cover_letter: "",
+    });
+
+alert("Application submitted successfully!");
 
   } catch (error) {
     console.error("Application error:", error);
@@ -214,15 +222,7 @@ const handleApplicationSubmit = async (e) => {
   }
 };
 
-    setApplicationMessage("Application submitted successfully!");
-
-    setApplicationForm({
-      applicant_name: "",
-      applicant_email: "",
-      resume: null,
-      cover_letter: "",
-    });
-
+    
   
 //html
   return (
@@ -351,7 +351,6 @@ const handleApplicationSubmit = async (e) => {
       }
       required
     />
-
 
     <textarea
       name="cover_letter"
