@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Job
-from .serializers import JobSerializer
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer
 from rest_framework import status
-
 
 #----job list-----#
 #-----------------#
@@ -50,14 +47,28 @@ def application_list(request):
         )
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
+  
 
 #----job apply-----#
 #-----------------#
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 def apply_for_job(request):
-    serializer = JobApplicationSerializer(data=request.data)
+
+    # GET: Display all applications
+    if request.method == 'GET':
+        applications = Application.objects.select_related(
+            'job'
+        ).order_by('-applied_at')
+
+        serializer = ApplicationSerializer(
+            applications,
+            many=True
+        )
+
+        return Response(serializer.data)
+
+    # POST: Submit a new application
+    serializer = ApplicationSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
