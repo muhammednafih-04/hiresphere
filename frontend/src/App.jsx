@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import './App.css';
+import Applications from "./Applications";
 
 const API_URL = 'http://127.0.0.1:8000/api/jobs/';
 
@@ -18,6 +19,7 @@ function App() {
   const [applicationJob, setApplicationJob] = useState(null);
   const [jobTypeFilter, setJobTypeFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('')
+  const [showApplications, setShowApplications] = useState(false);
   const [applicationMessage, setApplicationMessage] = useState("");
   const [applying, setApplying] = useState(false);
   const [applicationForm, setApplicationForm] = useState({
@@ -26,6 +28,15 @@ function App() {
   resume_link: "",
   cover_letter: "",
 });
+
+const handleApplicationChange = (e) => {
+  const { name, value, files } = e.target;
+
+  setApplicationForm((previous) => ({
+    ...previous,
+    [name]: files ? files[0] : value,
+  }));
+};
 
   const [applicationData, setApplicationData] = useState({
   applicant_name: "",
@@ -153,7 +164,6 @@ async function handleSubmit(event) {
   }
 }
 
-//handleapplicationchange//
 
 const handleApplicationSubmit = async (e) => {
   e.preventDefault();
@@ -163,7 +173,7 @@ const handleApplicationSubmit = async (e) => {
   try {
     const formData = new FormData();
 
-    formData.append("job", selectedJob.id);
+    formData.append("job", applicationJob.id);
     formData.append(
       "applicant_name",
       applicationForm.applicant_name
@@ -224,11 +234,11 @@ alert("Application submitted successfully!");
 
     
   
-//html
+//*******HTML********//
   return (
     <div className="app">
       <nav className="navbar">
-        <a className="logo" href="/">HireSphere<span>.</span></a>
+    <a className="logo" href="/">HireSphere<span>.</span></a>
 
         <div className="nav-links">
           <a href="#jobs">Find Jobs</a>
@@ -302,9 +312,10 @@ alert("Application submitted successfully!");
       <h3>Required Skills</h3>
       <p>{selectedJob.required_skills}</p>
 
-      <button
+     <button
        type="button"
       onClick={() => {
+      setApplicationJob(selectedJob);
       setShowApplicationForm(true);
       setApplicationMessage("");
          }}
@@ -314,9 +325,9 @@ alert("Application submitted successfully!");
       </section>
     )}
     
-{showApplicationForm && (
+   {showApplicationForm && applicationJob && (
   <form onSubmit={handleApplicationSubmit}>
-    <h3>Apply for {selectedJob.title}</h3>
+    <h3>Apply for {applicationJob.title}</h3>
 
     <input
       type="text"
@@ -591,7 +602,7 @@ alert("Application submitted successfully!");
       <h2>Apply for {applicationJob.title}</h2>
       <p>{applicationJob.company}</p>
 
-      <form onSubmit={submitApplication}>
+      <form onSubmit={handleApplicationSubmit}>
         <input
           type="text"
           placeholder="Full Name"
