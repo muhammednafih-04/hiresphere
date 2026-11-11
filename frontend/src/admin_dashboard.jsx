@@ -1,8 +1,9 @@
 
 import { useState, useEffect } from "react";
 import Applications from "./applications";
+import ManageJobs from "./managejobs";
 
-function AdminDashboard() {
+function AdminDashboard({ accessToken, onLogout }) {
   const [activePage, setActivePage] = useState("dashboard");
   const [totalJobs, setTotalJobs] = useState(0);
   const [totalApplications, setTotalApplications] = useState(0);
@@ -56,7 +57,11 @@ useEffect(() => {
         <button onClick={() => setActivePage("jobs")}>
           Manage Jobs
         </button>
-      </aside>
+
+        <button onClick={onLogout}>
+          Logout
+        </button>
+       </aside>
 
       <main className="admin-content">
 
@@ -94,12 +99,8 @@ useEffect(() => {
           <Applications />
         )}
 
-        {activePage === "jobs" && (
-          <div>
-            <h2>Manage Jobs</h2>
-            <p>Job management will be added later.</p>
-          </div>
-        )}
+        {activePage === "jobs" && <ManageJobs />}
+
 
       </main>
     </div>

@@ -563,16 +563,153 @@ footer p {
 }
 
 .stat-card h3 {
-  color: #64748b;
+  color: #f70202;
   font-size: 16px;
 }
 
 .stat-card h1 {
-  color: #172554;
+  color: #0a21ee;
   font-size: 32px;
   margin-top: 15px;
 }
 .stat-card:hover{
   transition: 0.3s;
-  
+  transform: translateY(-4px);
+  background-color: black;
+  }
+
+.manage-jobs {
+  width: 100%;
 }
+
+.job-form-container,
+.jobs-list {
+  background: white;
+  padding: 25px;
+  margin-top: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.job-form-container form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.job-form-container input,
+.job-form-container textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.job-form-container textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.job-form-container button,
+.jobs-list button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #172554;
+  color: white;
+  cursor: pointer;
+}
+
+.jobs-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.jobs-list th,
+.jobs-list td {
+  padding: 13px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.jobs-list th {
+  background: #f1f5f9;
+}
+
+.jobs-list button {
+  margin: 3px;
+}
+
+.job-message {
+  margin-top: 15px;
+  color: #172554;
+}
+
+@media (max-width: 700px) {
+  .job-form-container form {
+    grid-template-columns: 1fr;
+  }
+
+  .jobs-list {
+    overflow-x: auto;
+  }
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6fb;
+}
+
+.login-form {
+  width: 380px;
+  max-width: 90%;
+  padding: 35px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h1 {
+  color: #172554;
+  text-align: center;
+}
+
+.login-form p {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 13px;
+  background: #172554;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: red;
+}
+

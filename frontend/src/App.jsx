@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import Applications from "./applications";
 import AdminDashboard from "./admin_dashboard.jsx";
+import Login from './login.jsx'
 
 
 const API_URL = 'http://127.0.0.1:8000/api/jobs/';
@@ -60,6 +61,19 @@ const handleApplicationChange = (e) => {
     description: '',
     required_skills: '',
   });
+  const [accessToken, setAccessToken] = useState(
+    sessionStorage.getItem("accessToken") || ""
+  );
+  const handleLogin = (access, refresh) => {
+    sessionStorage.setItem("accessToken", access);
+    sessionStorage.setItem("refreshToken", refresh);
+    setAccessToken(access);
+  };
+  const handleLogout = () => {
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    setAccessToken("");
+  };
 
   async function loadJobs() {
     try {
