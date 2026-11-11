@@ -59,9 +59,9 @@ function Applications() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      View Resume
+                    View Resume
                     </a>
-                  )}
+                )}
                 </td>
               </tr>
             ))}

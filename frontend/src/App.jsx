@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from 'react';
 import './App.css';
-import Applications from "./Applications";
+import Applications from "./applications";
+import AdminDashboard from "./admin_dashboard.jsx";
+
 
 const API_URL = 'http://127.0.0.1:8000/api/jobs/';
 
@@ -233,8 +235,9 @@ alert("Application submitted successfully!");
 };
 
     
-  
+  //***************//
 //*******HTML********//
+ //****************//
   return (
     <div className="app">
       <nav className="navbar">
@@ -252,6 +255,21 @@ alert("Application submitted successfully!");
           </button>
         </div>
       </nav>
+          
+      {showApplications ? (
+  <div>
+    <button onClick={() => setShowApplications(false)}>
+      Back to Dashboard
+    </button>
+
+    <Applications />
+  </div>
+) : (
+  <div>
+    {/* Keep your existing HireSphere dashboard content here */}
+  </div>
+)}
+
 
       <header className="hero">
         <p className="eyebrow">YOUR NEXT OPPORTUNITY STARTS HERE</p>
