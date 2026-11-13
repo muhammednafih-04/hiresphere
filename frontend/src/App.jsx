@@ -702,5 +702,6 @@ alert("Application submitted successfully!");
       </footer>
     </div>
   );
-}
+
+}; 
 export default App;

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 
-function ManageJobs() {
+function ManageJobs({accessToken}) {
   const API_URL = "http://127.0.0.1:8000/api/jobs/";
 
   const emptyForm = {
@@ -23,7 +23,11 @@ function ManageJobs() {
   // Load all jobs
   const fetchJobs = async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Unable to load jobs");
@@ -66,6 +70,7 @@ function ManageJobs() {
         method,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(form),
       });
@@ -117,6 +122,9 @@ function ManageJobs() {
     try {
       const response = await fetch(`${API_URL}${id}/`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (!response.ok) {

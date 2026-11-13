@@ -9,6 +9,6 @@ import Login from './login.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AdminDashboard />
+    <admin_dashboard />
   </StrictMode>,
 )

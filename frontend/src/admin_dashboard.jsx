@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Applications from "./applications";
 import ManageJobs from "./managejobs";
+import App from "./App.jsx";
 
 function AdminDashboard({ accessToken, onLogout }) {
   const [activePage, setActivePage] = useState("dashboard");
@@ -13,8 +14,17 @@ useEffect(() => {
   const fetchDashboardData = async () => {
     try {
       const [jobsResponse, applicationsResponse] = await Promise.all([
-        fetch("http://127.0.0.1:8000/api/jobs/"),
-        fetch("http://127.0.0.1:8000/api/applications/")
+        fetch("http://127.0.0.1:8000/api/jobs/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }),
+      
+        fetch("http://127.0.0.1:8000/api/applications/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }),
       ]);
 
       if (!jobsResponse.ok || !applicationsResponse.ok) {
@@ -39,7 +49,8 @@ useEffect(() => {
   fetchDashboardData();
 }, []);
 
-  return (
+  return(
+  
     <div className="admin-layout">
 
       <aside className="admin-sidebar">
@@ -95,11 +106,10 @@ useEffect(() => {
   </div>
 )}
 
-        {activePage === "applications" && (
-          <Applications />
-        )}
+        {activePage === "applications" && ( <Applications accessToken={accessToken} />
+)}
 
-        {activePage === "jobs" && <ManageJobs />}
+        {activePage === "jobs" && <ManageJobs accessToken={accessToken} />}
 
 
       </main>
