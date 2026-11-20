@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from "react";
-import Applications from "./applications";
-import ManageJobs from "./managejobs";
-import App from "./App.jsx";
+import Applications from "./Application";
+import ManageJobs from "./Managejobs";
 
 function AdminDashboard({ accessToken, onLogout }) {
   const [activePage, setActivePage] = useState("dashboard");

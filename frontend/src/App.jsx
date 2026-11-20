@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import './App.css';
-import Applications from "./applications";
-import AdminDashboard from "./admin_dashboard.jsx";
-import Login from './login.jsx'
-
+import Applications from "./Application.jsx";
+import AdminDashboard from "./Admin_dashboard.jsx";
+import Login from './Login.jsx';
+import ManageJobs  from './Managejobs.jsx';
 
 const API_URL = 'http://127.0.0.1:8000/api/jobs/';
 
@@ -74,6 +73,7 @@ const handleApplicationChange = (e) => {
     sessionStorage.removeItem("refreshToken");
     setAccessToken("");
   };
+
 
   async function loadJobs() {
     try {
@@ -252,7 +252,14 @@ alert("Application submitted successfully!");
   //***************//
 //*******HTML********//
  //****************//
-  return (
+  return accessToken ? (
+    <AdminDashboard
+      accessToken={accessToken}
+      onLogout={handleLogout}
+    />
+  ) : (
+    <Login onLogin={handleLogin} />
+  );
     <div className="app">
       <nav className="navbar">
     <a className="logo" href="/">HireSphere<span>.</span></a>
@@ -581,7 +588,7 @@ alert("Application submitted successfully!");
           )}
 
           <div className="job-grid">
-          {filteredJobs.map((job) => ( (
+          {filteredJobs.map((job) => ( 
               <article className="job-card" key={job.id}>
                 <div className="company-icon">
                   {(job.company || '?').charAt(0).toUpperCase()}
@@ -619,7 +626,7 @@ alert("Application submitted successfully!");
               View Opportunity →
               </button>
               </article>
-            )))}
+            ))}
             {showApplicationForm && applicationJob && (
   <div className="application-overlay">
     <div className="application-modal">
@@ -689,7 +696,6 @@ alert("Application submitted successfully!");
     </div>
   </div>
 )}
-   
 </div>
               
         </section>
@@ -701,7 +707,8 @@ alert("Application submitted successfully!");
         <p>© 2026 HireSphere</p>
       </footer>
     </div>
-  );
+    
+
 
 }; 
 export default App;
