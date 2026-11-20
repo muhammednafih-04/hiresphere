@@ -260,6 +260,9 @@ alert("Application submitted successfully!");
   ) : (
     <Login onLogin={handleLogin} />
   );
+}; 
+export default App;
+{/*
     <div className="app">
       <nav className="navbar">
     <a className="logo" href="/">HireSphere<span>.</span></a>
@@ -287,7 +290,7 @@ alert("Application submitted successfully!");
   </div>
 ) : (
   <div>
-    {/* Keep your existing HireSphere dashboard content here */}
+  
   </div>
 )}
 
@@ -707,8 +710,4 @@ alert("Application submitted successfully!");
         <p>© 2026 HireSphere</p>
       </footer>
     </div>
-    
-
-
-}; 
-export default App;
+  */}
