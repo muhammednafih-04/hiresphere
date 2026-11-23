@@ -4,30 +4,57 @@ function Applications({ accessToken}) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const updateApplicationStatus = async (id, newStatus) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/applications/${id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error("Failed to update application status");
+      }
+  
+      setApplications((previousApplications) =>
+        previousApplications.map((app) =>
+          app.id === id ? { ...app, status: newStatus } : app
+        )
+      );
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
     
-useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/applications/", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to load applications");
-      }
-      return response.json();
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/applications/", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     })
-    .then((data) => {
-      setApplications(data);
-      setLoading(false);
-    })
-    .catch((err) => {
-      setError(err.message);
-      setLoading(false);
-    });
-}, [accessToken]);
-
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to load applications");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setApplications(data);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [accessToken]);
 
   if (loading) return <h3>Loading applications...</h3>;
 
@@ -48,6 +75,7 @@ useEffect(() => {
               <th>Email</th>
               <th>Job</th>
               <th>Resume</th>
+              <th>status</th>
             </tr>
           </thead>
 
@@ -59,6 +87,17 @@ useEffect(() => {
                 <td>{app.applicant_email}</td>
                 <td>{app.job_title || app.job}</td>
                 <td>
+  <select
+    value={app.status || "Pending"}
+    onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+  >
+    <option value="Pending">Pending</option>
+    <option value="Reviewed">Reviewed</option>
+    <option value="Shortlisted">Shortlisted</option>
+    <option value="Rejected">Rejected</option>
+  </select>
+</td>
+                <td>
                   {app.resume && (
                     <a
                       href={`http://127.0.0.1:8000${app.resume}`}
@@ -67,6 +106,8 @@ useEffect(() => {
                     >
                     View Resume
                     </a>
+                    
+                    
                 )}
                 </td>
               </tr>

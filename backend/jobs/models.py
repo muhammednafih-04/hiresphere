@@ -27,6 +27,14 @@ class Application(models.Model):
     resume = models.FileField(upload_to='resumes/')
     cover_letter = models.TextField(blank=True)
     applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+    max_length=20,
+    choices=[
+        ('Pending', 'Pending'),
+        ('Reviewed', 'Reviewed'),
+        ('Shortlisted', 'Shortlisted'),
+        ('Rejected', 'Rejected'),
+    ],default='Pending')
 
     def __str__(self):
         return f"{self.applicant_name} - {self.job.title}"

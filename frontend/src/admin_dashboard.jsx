@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Applications from "./Application";
 import ManageJobs from "./Managejobs";
@@ -46,7 +45,7 @@ useEffect(() => {
   };
 
   fetchDashboardData();
-}, []);
+}, [accessToken]);
 
   return(
   
