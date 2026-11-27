@@ -1,9 +1,45 @@
+
 import { useState, useEffect } from "react";
 
-function Applications({ accessToken}) {
+function Applications({ accessToken }) {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setError("");
+
+    fetch("http://127.0.0.1:8000/api/applications/", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then(async (response) => {
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.detail || "Failed to load applications"
+          );
+        }
+
+        return data;
+      })
+      .then((data) => {
+        setApplications(
+          Array.isArray(data) ? data : data.results || []
+        );
+      })
+      .catch((err) => {
+        console.error("Applications error:", err);
+        setError(err.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [accessToken]);
+
   const updateApplicationStatus = async (id, newStatus) => {
     try {
       const response = await fetch(
@@ -17,48 +53,32 @@ function Applications({ accessToken}) {
           body: JSON.stringify({ status: newStatus }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Failed to update application status");
       }
-  
-      setApplications((previousApplications) =>
-        previousApplications.map((app) =>
-          app.id === id ? { ...app, status: newStatus } : app
+
+      setApplications((previous) =>
+        previous.map((app) =>
+          app.id === id
+            ? { ...app, status: newStatus }
+            : app
         )
       );
-    } catch (error) {
-      alert(error.message);
+
+      alert("Application status updated!");
+    } catch (err) {
+      alert(err.message);
     }
   };
 
-    
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/applications/", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load applications");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setApplications(data);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [accessToken]);
+  if (loading) {
+    return <h3>Loading applications...</h3>;
+  }
 
-  if (loading) return <h3>Loading applications...</h3>;
-
-  if (error) return <p>{error}</p>;
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <div className="applications-page">
@@ -75,7 +95,7 @@ function Applications({ accessToken}) {
               <th>Email</th>
               <th>Job</th>
               <th>Resume</th>
-              <th>status</th>
+              <th>Status</th>
             </tr>
           </thead>
 
@@ -86,29 +106,40 @@ function Applications({ accessToken}) {
                 <td>{app.applicant_name}</td>
                 <td>{app.applicant_email}</td>
                 <td>{app.job_title || app.job}</td>
+
                 <td>
-  <select
-    value={app.status || "Pending"}
-    onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
-  >
-    <option value="Pending">Pending</option>
-    <option value="Reviewed">Reviewed</option>
-    <option value="Shortlisted">Shortlisted</option>
-    <option value="Rejected">Rejected</option>
-  </select>
-</td>
-                <td>
-                  {app.resume && (
+                  {app.resume ? (
                     <a
-                      href={`http://127.0.0.1:8000${app.resume}`}
+                      href={
+                        app.resume.startsWith("http")
+                          ? app.resume
+                          : `http://127.0.0.1:8000${app.resume}`
+                      }
                       target="_blank"
                       rel="noreferrer"
                     >
-                    View Resume
+                      View Resume
                     </a>
-                    
-                    
-                )}
+                  ) : (
+                    "No Resume"
+                  )}
+                </td>
+
+                <td>
+                  <select
+                    value={app.status || "Pending"}
+                    onChange={(e) =>
+                      updateApplicationStatus(
+                        app.id,
+                        e.target.value
+                      )
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Reviewed">Reviewed</option>
+                    <option value="Shortlisted">Shortlisted</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
                 </td>
               </tr>
             ))}

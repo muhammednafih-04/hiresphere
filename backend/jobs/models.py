@@ -33,8 +33,8 @@ class Application(models.Model):
         ('Pending', 'Pending'),
         ('Reviewed', 'Reviewed'),
         ('Shortlisted', 'Shortlisted'),
-        ('Rejected', 'Rejected'),
-    ],default='Pending')
+        ('Rejected', 'Rejected'),]
+        ,default='Pending')
 
     def __str__(self):
         return f"{self.applicant_name} - {self.job.title}"

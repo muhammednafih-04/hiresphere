@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import Applications from "./Application.jsx";
 import AdminDashboard from "./Admin_dashboard.jsx";
-import Login from './Login.jsx';
-import ManageJobs  from './Managejobs.jsx';
+import Login from "./Login.jsx";
+import ManageJobs  from "./Managejobs.jsx";
 
 const API_URL = 'http://127.0.0.1:8000/api/jobs/';
 

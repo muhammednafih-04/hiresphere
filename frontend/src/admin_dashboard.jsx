@@ -67,9 +67,16 @@ useEffect(() => {
           Manage Jobs
         </button>
 
-        <button onClick={onLogout}>
-          Logout
-        </button>
+        <button
+       type="button"
+       onClick={(e) => {
+       e.preventDefault();
+
+        if (window.confirm("Are you sure you want to logout?")) {
+        onLogout();
+      }
+     }}>Logout
+       </button>
        </aside>
 
       <main className="admin-content">
@@ -104,8 +111,7 @@ useEffect(() => {
   </div>
 )}
 
-        {activePage === "applications" && ( <Applications accessToken={accessToken} />
-)}
+        {activePage === "applications" && ( <Applications accessToken={accessToken} />)}
 
         {activePage === "jobs" && <ManageJobs accessToken={accessToken} />}
 

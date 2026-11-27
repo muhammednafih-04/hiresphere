@@ -6,10 +6,13 @@ from .serializers import JobSerializer, ApplicationSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from .permissions import IsAdminOrReadOnly, IsAdminOrCreateOnly
+from rest_framework.decorators import api_view, permission_classes
 
 #----job list-----#
 #-----------------#
 @api_view(['GET','POST'])
+@permission_classes([IsAdminOrReadOnly])
 @permission_classes([IsAuthenticated])
 def job_list(request):
     if request.method == 'GET':
@@ -33,6 +36,7 @@ def job_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrReadOnly])
 @permission_classes([IsAuthenticated])
 def job_detail(request, pk):
     try:
@@ -95,6 +99,7 @@ def application_list(request):
 #----job apply-----#
 #-----------------#
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdminOrReadOnly])
 def apply_for_job(request):
 
     # GET: Display all applications
