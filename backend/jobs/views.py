@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from .permissions import IsAdminOrReadOnly, IsAdminOrCreateOnly
 from rest_framework.decorators import api_view, permission_classes
@@ -34,7 +34,8 @@ def job_list(request):
         status=status.HTTP_400_BAD_REQUEST
     )
 
-
+#--------job detail-------#
+#-------------------------#
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAdminOrReadOnly])
 @permission_classes([IsAuthenticated])
@@ -74,7 +75,7 @@ def job_detail(request, pk):
         )
 
  
- #----application list-----#
+#----application list-----#
 #-----------------#
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -124,6 +125,27 @@ def apply_for_job(request):
             serializer.data,
             status=status.HTTP_201_CREATED
         )
+
+    return Response(
+        serializer.errors,
+        status=status.HTTP_400_BAD_REQUEST
+    )
+
+#--------
+@api_view(['PATCH'])
+@permission_classes([IsAdminUser])
+def application_detail(request, pk):
+    application = get_object_or_404(Application, pk=pk)
+
+    serializer = ApplicationSerializer(
+        application,
+        data=request.data,
+        partial=True
+    )
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
 
     return Response(
         serializer.errors,

@@ -53,22 +53,29 @@ function Applications({ accessToken }) {
           body: JSON.stringify({ status: newStatus }),
         }
       );
-
+  
+      const data = await response.json();
+  
+      console.log("Status code:", response.status);
+      console.log("Server response:", data);
+  
       if (!response.ok) {
-        throw new Error("Failed to update application status");
+        throw new Error(
+          JSON.stringify(data)
+        );
       }
-
+  
       setApplications((previous) =>
         previous.map((app) =>
-          app.id === id
-            ? { ...app, status: newStatus }
-            : app
+          app.id === id ? { ...app, status: newStatus } : app
         )
       );
-
-      alert("Application status updated!");
-    } catch (err) {
-      alert(err.message);
+  
+      alert("Status updated successfully!");
+  
+    } catch (error) {
+      console.error("Status update error:", error);
+      alert(error.message);
     }
   };
 
